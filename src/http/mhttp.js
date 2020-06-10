@@ -54,5 +54,26 @@ instance.interceptors.response.use(
     return Promise.reject(error); // 返回接口返回的错误信息
   }
 );
-
+const apiURL = "http://119.28.128.52:8888"
+export function get(url, params, loadingFlag = true) {
+  url = apiURL + url;
+  let loading
+  if (loadingFlag) {
+      loading = window.vm && window.vm.$createToast({
+          time: 0,
+          type: 'loading',
+          mask: true
+      }).show()
+  }
+  return new Promise((resolve, reject) => {
+      axios.get(url, {
+          params: params
+      }).then(res => {
+          loading && loading.hide()
+          resolve(res.data);
+      }).catch(err => {
+          reject(err.data);
+      })
+  });
+}
 export default instance;

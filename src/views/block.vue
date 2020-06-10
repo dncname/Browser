@@ -24,9 +24,19 @@
         <!-- <div><p>状态: 不可逆</p></div> -->
         <div class="block_1">
           <p>Block time:{{ currentBlock.beijingTime }}</p>
-          <p>
+          <p v-if="$route.params.id - 1 < 1">
             Previous block:
-            <span @click="jump($route.params.id - 1)"
+            <span
+              @click="jump($route.params.id - 1 < 1 ? 1 : $route.params.id - 1)"
+              >#0</span
+            >
+          </p>
+          <p v-if="$route.params.id - 1 >= 1">
+            Previous block:
+            <span
+              @click="
+                jump($route.params.id - 1 <= 1 ? 1 : $route.params.id - 1)
+              "
               >#{{ this.$route.params.id - 1 }}</span
             >
           </p>
@@ -43,7 +53,7 @@
         <p class="block_2">block Hash:{{ currentBlock.id }}</p>
       </div>
       <div class="block_data">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tabs v-model="activeName">
           <el-tab-pane :label="text" name="first">
             <div class="transactions">
               <div
@@ -98,7 +108,7 @@
                         class="name3_bottom"
                         v-show="items.name == 'transfer'"
                       >
-                        <json-view :data="items.data" />
+                        <json-view :data="changeTrx" />
                       </div>
                     </div>
                   </div>
@@ -145,9 +155,19 @@
         <div class="block_1">
           <p>Block time :{{ currentBlock.beijingTime }}</p>
           <p>Block node :{{ currentBlock.producer }}</p>
-          <p class="p1">
+          <p v-if="$route.params.id - 1 < 1" class="p1">
             Previous block:
-            <span @click="jump(this.$route.params.id - 1)"
+            <span
+              @click="jump($route.params.id - 1 < 1 ? 1 : $route.params.id - 1)"
+              >#0</span
+            >
+          </p>
+          <p v-if="$route.params.id - 1 >= 1" class="p1">
+            Previous block:
+            <span
+              @click="
+                jump($route.params.id - 1 <= 1 ? 1 : $route.params.id - 1)
+              "
               >#{{ this.$route.params.id - 1 }}</span
             >
           </p>
@@ -161,7 +181,7 @@
         </div>
       </div>
       <div class="block_data">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tabs v-model="activeName">
           <el-tab-pane :label="text" name="first">
             <div class="transactions">
               <div
@@ -218,7 +238,7 @@
                         class="name3_bottom"
                         v-show="items.name == 'transfer'"
                       >
-                        <json-view :data="items.data" />
+                        <json-view :data="changeTrx" />
                       </div>
                     </div>
                   </div>
@@ -245,8 +265,8 @@
 </template>
 
 <script>
+import { get_transaction, get_block, } from "@/http/api.js";
 import jsonView from 'vue-json-views'
-import { get_block ,get_transaction } from "@/http/api.js";
 export default {
   name: 'blocke',
   components: {
@@ -268,17 +288,18 @@ export default {
     }
   },
   methods: {
-    handleClick (tab, event) {
-      console.log(tab, event);
-    },
-    // 1035332    1034432  103533
-    async   get_block (id) {
+    // handleClick (tab, event) {
+    //   console.log(tab, event);
+    // },
+    // 1035332    1034432   103533
+    async   get_block () {
       this.$http
-        .post(get_block, { block_num_or_id: id })
+        .post(get_block, { block_num_or_id: this.$route.params.id })
         .then(({ data }) => {
-          let obj = Object.assign(data);
+          let obj = data;
           obj = JSON.stringify(obj).replace(/EOS/g, "DNC").replace(/eos/g, "dnc");
           obj = JSON.parse(obj)
+
           let getDate = Number(new Date(data.timestamp)) + 28800000; //获取到的时间加8个小时 得到北京时间
           let currentTimeRub = new Date(getDate);
           let Y = currentTimeRub.getFullYear();
@@ -291,13 +312,14 @@ export default {
           obj.beijingTime = beijingTime;
           obj.getDate = getDate;
           this.count = 0;
-          let a = [];
+          let aChange = [];
+          let bChange = [];
           obj.transactions.map((items) => {
             if (items.trx.transaction.actions[0].name == "newaccount") {
-              this.get_transaction(items.trx.id).then((resolve) => { // resolve
-                this.changeTrx = items.trx.id;
 
-                a[items.trx.id] = resolve[0].account_ram_deltas[0].account;
+              this.get_transaction(items.trx.id).then((resolve) => {
+                bChange[items.trx.id] = items.trx.transaction.actions[0].data;
+                aChange[items.trx.id] = resolve[0].account_ram_deltas[0].account;
               })
             }
             // items.trx.transaction.actions.map((item, index) => {
@@ -305,10 +327,14 @@ export default {
             this.count += items.trx.transaction.actions.length;
           })
           setTimeout(() => {
-            this.trx = a;
+            this.trx = aChange;
+            this.changeTrx = bChange;
           }, 800)
           this.text = "transaction(" + this.count + ")";
+
           this.currentBlock = Object.assign(obj, this.currentBlock, this.currentBlock.traces);
+
+
         });
     },
     async get_transaction (id) {
@@ -331,8 +357,8 @@ export default {
   },
   watch: {
     '$route' () { //监听路由是否变化
-      this.get_block(this.$route.params.id)
-    }
+      window.location.reload();
+    },
   },
   filters: {
 

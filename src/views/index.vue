@@ -203,8 +203,7 @@ export default {
               for (var i = 0; i < 10; i++) {
                 this.get_block(Number(obj.last_irreversible_block_num - i));
               }
-            }
-            else {
+            } else {
               num = this.tableData[0].block_num;
             }
             if ((obj.last_irreversible_block_num) - num > 10) {
@@ -240,9 +239,8 @@ export default {
           obj.beijingTime = beijingTime;
           obj.appBeiJingTime = appBeiJingTime;
           obj.getDate = getDate;
-          if (this.tableData.length >= 10) {
+          while (this.tableData.length >= 10) {
             this.tableData.pop();
-            return;
           }
           this.tableData.push(obj);
           // 对象排序
@@ -291,8 +289,10 @@ export default {
   created () {
     this.get_info();
     setInterval(() => {
-      this.get_info();
-    }, 2000)
+      setTimeout(() => {
+        this.get_info();
+      }, 0)
+    }, 3000)
     this.get_table_rows();
     this.get_bps_table();
   },
