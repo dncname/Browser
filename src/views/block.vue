@@ -1,24 +1,7 @@
 <template>
   <div class="content">
     <div class="pc_content">
-      <div class="headerBox">
-        <div class="header_main">
-          <div>
-            <img src="../assets/imgs/1.png" alt="" />
-            <p>The most professional DNC data service provider</p>
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Transaction / account / contract / address / block height"
-              readonly
-            />
-            <div>
-              <img src="../assets/imgs/6.png" alt="" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- <pubHeader></pubHeader> -->
       <div class="Latest_block">
         <h2>Current block #{{ $route.params.id }}</h2>
         <!-- <div><p>状态: 不可逆</p></div> -->
@@ -50,7 +33,7 @@
             >
           </p>
         </div>
-        <p class="block_2">block Hash:{{ currentBlock.id }}</p>
+        <p class="block_2">Block Hash:{{ currentBlock.id }}</p>
       </div>
       <div class="block_data">
         <el-tabs v-model="activeName">
@@ -62,7 +45,8 @@
                 :key="index"
               >
                 <div class="list_l">
-                  <p>{{ item.trx.id }}</p>
+                  <!-- <p >{{ item.trx.id }}</p> -->
+                  <router-link :to="{path:'/tx/'+item.trx.id+'.html'}" tag="p">{{item.trx.id}}</router-link>
                   <span>executed</span>
                 </div>
                 <div
@@ -108,7 +92,7 @@
                         class="name3_bottom"
                         v-show="items.name == 'transfer'"
                       >
-                        <json-view :data="changeTrx" />
+                        <json-view :data="items.data" />
                       </div>
                     </div>
                   </div>
@@ -123,32 +107,10 @@
           </el-tab-pane>
         </el-tabs>
       </div>
-      <div class="footer_box">
-        <div class="footer">
-          <img src="../assets/imgs/1.png" alt="" />
-          <p>A project from NASA in 1983，in the 1960，</p>
-          <p>ARPAnet appeared in the United States</p>
-        </div>
-      </div>
+      <!-- <pubFooter></pubFooter> -->
     </div>
     <div class="app_content">
-      <div class="headerBox">
-        <div class="header_main">
-          <div>
-            <img src="../assets/imgs/1.png" alt="" />
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Transaction / account / contract / address / block height"
-              readonly
-            />
-            <div>
-              <img src="../assets/imgs/6.png" alt="" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- <pubHeader></pubHeader> -->
       <div class="Latest_block">
         <h2>Current block #{{ this.$route.params.id }}</h2>
         <!-- <div><p>状态: 不可逆</p></div> -->
@@ -177,7 +139,7 @@
               >#{{ Number(this.$route.params.id) + 1 }}</span
             >
           </p>
-          <p>block Hash:{{ currentBlock.id }}</p>
+          <p>Block Hash:{{ currentBlock.id }}</p>
         </div>
       </div>
       <div class="block_data">
@@ -190,7 +152,7 @@
                 :key="index"
               >
                 <div class="list_l">
-                  <p>{{ item.trx.id }}</p>
+                   <router-link :to="{path:'/tx/'+item.trx.id+'.html'}" tag="p">{{item.trx.id}}</router-link>
                   <span>executed</span>
                 </div>
                 <div
@@ -238,7 +200,7 @@
                         class="name3_bottom"
                         v-show="items.name == 'transfer'"
                       >
-                        <json-view :data="changeTrx" />
+                        <json-view :data="items.data" />
                       </div>
                     </div>
                   </div>
@@ -253,13 +215,7 @@
           </el-tab-pane>
         </el-tabs>
       </div>
-      <div class="footer_box">
-        <div class="footer">
-          <img src="../assets/imgs/1.png" alt="" />
-          <p>A project from NASA in 1983，in the 1960，</p>
-          <p>ARPAnet appeared in the United States</p>
-        </div>
-      </div>
+      <!-- <pubFooter></pubFooter> -->
     </div>
   </div>
 </template>
@@ -267,10 +223,14 @@
 <script>
 import { get_transaction, get_block, } from "@/http/api.js";
 import jsonView from 'vue-json-views'
+// import pubHeader from "@/components/pub_header.vue"
+// import pubFooter from "@/components/pub_footer.vue"
 export default {
   name: 'blocke',
   components: {
-    jsonView
+    jsonView,
+    // pubHeader,
+    // pubFooter
   },
   data () {
     return {
@@ -285,6 +245,7 @@ export default {
       changeTrx: [],
       flag: false,
       count: 0,
+
     }
   },
   methods: {
@@ -316,7 +277,6 @@ export default {
           let bChange = [];
           obj.transactions.map((items) => {
             if (items.trx.transaction.actions[0].name == "newaccount") {
-
               this.get_transaction(items.trx.id).then((resolve) => {
                 bChange[items.trx.id] = items.trx.transaction.actions[0].data;
                 aChange[items.trx.id] = resolve[0].account_ram_deltas[0].account;
@@ -331,9 +291,7 @@ export default {
             this.changeTrx = bChange;
           }, 800)
           this.text = "transaction(" + this.count + ")";
-
           this.currentBlock = Object.assign(obj, this.currentBlock, this.currentBlock.traces);
-
 
         });
     },
@@ -383,87 +341,13 @@ export default {
     min-width: 1200px;
     .pc_content {
       width: 100%;
-      .headerBox {
-        width: 100%;
-        height: 117px;
-        background: rgba(34, 90, 194, 1);
-        min-width: 1200px;
-        .header_main {
-          height: 117px;
-          width: 1200px;
-          margin: 0 auto;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-
-          > div:nth-child(1) {
-            font-size: 14px;
-            font-weight: 400;
-            border-radius: 4px;
-            color: #fff;
-            text-decoration: unset;
-            white-space: pre;
-            display: flex;
-            align-items: center;
-            > p {
-              margin-left: 10px;
-            }
-          }
-          > div:nth-child(2) {
-            padding-top: 15px;
-            display: flex;
-            input {
-              border: none;
-              padding-left: 17px;
-              width: 414px;
-              height: 45px;
-              background: rgba(255, 255, 255, 1);
-              box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
-              opacity: 1;
-              border-radius: 11px;
-            }
-            > div {
-              margin-left: 15px;
-              width: 65px;
-              height: 45px;
-              background: rgba(255, 255, 255, 1);
-              border-radius: 11px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
-          }
-        }
-      }
-      .footer_box {
-        margin-top: 70px;
-        height: 150px;
-        width: 100%;
-        background: url("../assets/imgs/7.png") no-repeat center;
-        background-size: 100% 169px;
-        > .footer {
-          width: 1200px;
-          height: 100%;
-          margin: 0 auto;
-          color: white;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          p {
-            text-align: center;
-            line-height: 30px;
-            height: 30px;
-          }
-        }
-      }
+      padding: 50px 0;
       .Latest_block {
         width: 1200px;
         padding: 23px;
         box-sizing: border-box;
         margin: 0 auto;
         background: white;
-        margin-top: 50px;
         text-align: left;
         > h2 {
           margin-bottom: 28px;
@@ -520,6 +404,7 @@ export default {
               white-space: nowrap;
               text-overflow: ellipsis;
               width: 120px;
+              cursor: pointer;
             }
             > span:nth-child(2) {
               text-align: center;
@@ -630,7 +515,7 @@ export default {
   .content {
     background: #efefef;
     width: 100%;
-    position: absolute;
+    position: relative;
     left: 0;
     bottom: 0;
     top: 0;
@@ -684,27 +569,7 @@ export default {
         }
       }
     }
-    .footer_box {
-      height: 150px;
-      width: 100%;
-      background: url("../assets/imgs/7.png") no-repeat center;
-      background-size: 100% 169px;
-      > .footer {
-        width: 100%;
-        height: 100%;
-        margin: 0 auto;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        p {
-          text-align: center;
-          line-height: 30px;
-          height: 30px;
-        }
-      }
-    }
+
     .Latest_block {
       width: 100%;
       padding: 23px;
@@ -755,7 +620,7 @@ export default {
           display: flex;
           justify-content: center;
           flex-direction: column;
-          align-items: center;
+          align-items: left;
           padding: 20px 10px;
           > p:nth-child(1) {
             text-align: center;
@@ -770,6 +635,7 @@ export default {
             text-align: center;
             background-color: rgba(82, 196, 26, 0.8);
             display: inline-block;
+            max-width: 25%;
             line-height: 20px;
             padding: 0 6px;
             font-size: 12px;

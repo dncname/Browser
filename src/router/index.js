@@ -13,11 +13,21 @@ Vue.use(VueRouter)
     name: 'block',
     component: () => import('../views/block.vue')
   },
+  {
+    path: '/tx/:id.html',
+    name: 'tx',
+    component: () => import('../views/transaction.vue')
+  },
+  {
+    path: '/richList',
+    name: 'richList',
+    component: () => import('../views/richList.vue')
+  }
 ]
 
 
 const router = new VueRouter({
-  mode: "history",
+  // mode: "history",
   base: process.env.BASE_URL,
   routes
 });

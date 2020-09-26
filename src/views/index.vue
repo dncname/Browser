@@ -1,24 +1,6 @@
 <template>
   <div class="content">
     <div class="pc_content">
-      <div class="headerBox">
-        <div class="header_main">
-          <div>
-            <img src="../assets/imgs/1.png" alt="" />
-            <p>The most professional DNC data service provider</p>
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Transaction / account / contract / address / block height"
-              readonly
-            />
-            <div>
-              <img src="../assets/imgs/6.png" alt="" />
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="Latest_block">
         <div class="Latest_header">
           <div>Latest block</div>
@@ -47,6 +29,7 @@
           </div>
         </div>
       </div>
+      <RichList></RichList>
       <div class="Super_pole">
         <div class="Super_pole_header">
           <div>Super pole</div>
@@ -79,33 +62,9 @@
           </div>
         </div>
       </div>
-
-      <div class="footer_box">
-        <div class="footer">
-          <img src="../assets/imgs/1.png" alt="" />
-          <p>A project from NASA in 1983,in the 1960,</p>
-          <p>ARPAnet appeared in the United States</p>
-        </div>
-      </div>
     </div>
     <div class="app_content">
-      <div class="headerBox">
-        <div class="header_main">
-          <div>
-            <img src="../assets/imgs/1.png" alt="" />
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Transaction / account / contract / address / block height"
-              readonly
-            />
-            <div>
-              <img src="../assets/imgs/6.png" alt="" />
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- <pubHeader></pubHeader> -->
       <div class="Latest_block">
         <div class="Latest_header">
           <div>Latest block</div>
@@ -134,6 +93,7 @@
           </div>
         </div>
       </div>
+       <RichList></RichList>
       <div class="Super_pole">
         <div class="Super_pole_header">
           <div>Super pole</div>
@@ -166,23 +126,18 @@
           </div>
         </div>
       </div>
-
-      <div class="footer_box">
-        <div class="footer">
-          <img src="../assets/imgs/1.png" alt="" />
-          <p>A project from NASA in 1983,in the 1960,</p>
-          <p>ARPAnet appeared in the United States</p>
-        </div>
-      </div>
+      <!-- <pubFooter></pubFooter> -->
     </div>
   </div>
 </template>
 
 <script>
 import { get_info, get_block, get_table_rows } from "@/http/api.js";
+import RichList from "./index/richList.vue"
 export default {
   name: 'index',
   components: {
+    RichList,
   },
   data () {
     return {
@@ -335,63 +290,11 @@ export default {
 
   .pc_content {
     width: 100%;
-
-    .headerBox {
-      width: 100%;
-      height: 117px;
-      background: rgba(34, 90, 194, 1);
-      .header_main {
-        height: 117px;
-        width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        > div:nth-child(1) {
-          font-size: 14px;
-          font-weight: 400;
-          border-radius: 4px;
-          color: #fff;
-          text-decoration: unset;
-          white-space: pre;
-          display: flex;
-          align-items: center;
-          > p {
-            margin-left: 10px;
-          }
-        }
-        > div:nth-child(2) {
-          padding-top: 15px;
-          display: flex;
-          input {
-            border: none;
-            padding-left: 17px;
-            width: 414px;
-            height: 45px;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
-            opacity: 1;
-            border-radius: 11px;
-          }
-          > div {
-            margin-left: 15px;
-            width: 65px;
-            height: 45px;
-            background: rgba(255, 255, 255, 1);
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-        }
-      }
-    }
+    padding: 50px 0;
     .Latest_block,
     .Super_pole {
       width: 1200px;
       margin: 0 auto;
-      margin-top: 50px;
       border: 1px solid rgba(0, 0, 0, 0.125);
       padding: 0 15px;
       box-sizing: border-box;
@@ -541,28 +444,6 @@ export default {
         > div:nth-child(4) {
           flex: 1;
           text-align: center;
-        }
-      }
-    }
-    .footer_box {
-      margin-top: 70px;
-      height: 150px;
-      width: 100%;
-      background: url("../assets/imgs/7.png") no-repeat center;
-      background-size: 100% 169px;
-      > .footer {
-        width: 1200px;
-        height: 100%;
-        margin: 0 auto;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        p {
-          text-align: center;
-          line-height: 30px;
-          height: 30px;
         }
       }
     }
@@ -574,58 +455,12 @@ export default {
   }
   .app_content {
     width: 100%;
-    position: absolute;
+    position: relative;
     left: 0;
     bottom: 0;
     top: 0;
     right: 0;
-    .headerBox {
-      width: 100%;
-      background: rgba(34, 90, 194, 1);
-      .header_main {
-        width: 100%;
-        margin: 0 auto;
-        padding: 19px 15px 10px 15px;
-        box-sizing: border-box;
-        > div:nth-child(1) {
-          font-size: 14px;
-          font-weight: 400;
-          border-radius: 4px;
-          color: #fff;
-          text-decoration: unset;
-          white-space: pre;
-          display: flex;
-          align-items: center;
-          > p {
-            margin-left: 10px;
-          }
-        }
-        > div:nth-child(2) {
-          padding-top: 15px;
-          display: flex;
-          input {
-            border: none;
-            padding-left: 17px;
-            height: 45px;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
-            opacity: 1;
-            border-radius: 11px;
-            width: 100%;
-          }
-          > div {
-            margin-left: 15px;
-            width: 65px;
-            height: 45px;
-            background: rgba(255, 255, 255, 1);
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-        }
-      }
-    }
+
     .Latest_block,
     .Super_pole {
       width: 100%;
@@ -790,28 +625,6 @@ export default {
         > div:nth-child(4) {
           flex: 5;
           text-align: center;
-        }
-      }
-    }
-    .footer_box {
-      margin-top: 70px;
-      height: 150px;
-      width: 100%;
-      background: url("../assets/imgs/7.png") no-repeat center;
-      background-size: 100% 169px;
-      > .footer {
-        width: 100%;
-        height: 100%;
-        margin: 0 auto;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        p {
-          text-align: center;
-          line-height: 30px;
-          height: 30px;
         }
       }
     }

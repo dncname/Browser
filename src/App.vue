@@ -1,19 +1,29 @@
 <template>
   <div id="app">
-    <router-view/>
+    <pubHeader></pubHeader>
+    <router-view />
+    <pubFooter></pubFooter>
   </div>
 </template>
-
+<script>
+import pubHeader from "@/components/pub_header.vue"
+import pubFooter from "@/components/pub_footer.vue"
+export default {
+  components: {
+    pubHeader,
+    pubFooter
+  },
+}
+</script>
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  
 }
-.json-view-container{
-  background: #f8f8f8!important;
+.json-view-container {
+  background: #f8f8f8 !important;
 }
 #nav {
   padding: 30px;
